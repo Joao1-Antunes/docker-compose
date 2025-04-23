@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  database: 
+    image: mysql:8
+    container_name: mysql
+    volumes:
+      - db:/var/lib/mysql
+    ports: 
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test-db
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=root
+    networks:
+      - first-network
+
+  dock:
+    build: 
+      context: . 
+    container_name: dock
+    ports: 
+      - 3001:3000
+    depends_on:
+      - database
+    networks:
+      - first-network
+  
+networks:
+  first-network:
+    name: first-network
+    external: true
+    driver: bridge
+
+volumes:
+ db: 
